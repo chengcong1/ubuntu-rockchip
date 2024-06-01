@@ -10,9 +10,9 @@ function config_image_hook__orangepi-5-plus() {
     local overlay="$2"
 
     # Install panfork
-    chroot "${rootfs}" add-apt-repository -y ppa:jjriek/panfork-mesa
+    chroot "${rootfs}" add-apt-repository -y ppa:oibaf/graphics-drivers
     chroot "${rootfs}" apt-get update
-    chroot "${rootfs}" apt-get -y install mali-g610-firmware
+    # chroot "${rootfs}" apt-get -y install mali-g610-firmware
     chroot "${rootfs}" apt-get -y dist-upgrade
 
     # Fix WiFi not working when bluetooth enabled for the official RTL8852BE WiFi + BT card
