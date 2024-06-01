@@ -3,7 +3,7 @@ name: Build
 on:
   workflow_dispatch:
 
-run-name: Build Ubuntu 22.04 LTS and 24.04 LTS
+run-name: Build Ubuntu 24.04 LTS
 
 jobs:
   rootfs:
@@ -13,9 +13,7 @@ jobs:
         matrix:
           flavor:
             - desktop
-            - server
           suite:
-            - jammy
             - noble
     steps:
       - name: Get more disk space
@@ -53,8 +51,8 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4.3.1
         with:
-            name: ubuntu-${{ matrix.suite == 'jammy' && '22.04' || matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64-rootfs
-            path: ./build/ubuntu-${{ matrix.suite == 'jammy' && '22.04' || matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64.rootfs.tar.xz
+            name: ubuntu-${{matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64-rootfs
+            path: ./build/ubuntu-${{matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64.rootfs.tar.xz
             if-no-files-found: error
 
   kernel:
@@ -63,7 +61,6 @@ jobs:
     strategy:
         matrix:
           suite:
-            - jammy
             - noble
     steps:
       - name: Get more disk space
@@ -101,7 +98,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4.3.1
         with:
-            name: linux-rockchip-${{ matrix.suite == 'jammy' && '5.10' || matrix.suite == 'noble' && '6.1' }}
+            name: linux-rockchip-${{matrix.suite == 'noble' && '6.1' }}
             path: ./build/linux-*.deb
             if-no-files-found: error
 
@@ -116,9 +113,7 @@ jobs:
           - orangepi-5-plus
         flavor:
           - desktop
-          - server
         suite:
-          - jammy
           - noble
     steps:
       - name: Get more disk space
@@ -152,13 +147,13 @@ jobs:
       - name: Checkout rootfs
         uses: actions/download-artifact@v4.1.2
         with:
-            name: ubuntu-${{ matrix.suite == 'jammy' && '22.04' || matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64-rootfs
+            name: ubuntu-${{matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64-rootfs
             path: ./build/
 
       - name: Checkout kernel
         uses: actions/download-artifact@v4.1.2
         with:
-            name: linux-rockchip-${{ matrix.suite == 'jammy' && '5.10' || matrix.suite == 'noble' && '6.1' }}
+            name: linux-rockchip-${{matrix.suite == 'noble' && '6.1' }}
             path: ./build/
 
       - name: Build
@@ -168,7 +163,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: ubuntu-${{ matrix.suite == 'jammy' && '22.04' || matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64-${{ matrix.board }}
+          name: ubuntu-${{matrix.suite == 'noble' && '24.04' }}-preinstalled-${{ matrix.flavor }}-arm64-${{ matrix.board }}
           path: ./images/ubuntu-*-preinstalled-${{ matrix.flavor }}-arm64-${{ matrix.board }}.*
           if-no-files-found: error
 
